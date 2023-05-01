@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nextleg API</title>
+    <script>
+        function generateImage() {
+            var image_url = document.getElementById('image_url').value;
+            var prompt = document.getElementById('prompt').value;
+            var webhook_image = document.getElementById('webhook_image');
+            var webhook_image_code = document.getElementById('webhook_image_code');
+            var url = "https://api.thenextleg.io/v2/imagine";
+            var payload = JSON.stringify({
+                "msg": image_url + " " + prompt,
+                "ref": "",
+                "webhookOverride": ""
+            });
+            var headers = {
+                'Authorization': 'Bearer 4c6741d5-9907-4bfd-9bf6-f1ab9f901170',
+                'Content-Type': 'application/json'
+            };
+            fetch(url, {
+                method: "POST",
+                headers: headers,
+                body: payload
+            })
+            .then(response => response.json())
+            .then(data => {
+                var webhook_image_code = data['webhookImageCode'];
+                webhook_image.src = webhook_image_code;
+                webhook_image.style.display = "block";
+                webhook_image_code.style.display = "none";
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Nextleg API</h1>
+    <form method="POST">
+        <label for="image_url">Image URL:</label>
+        <input type="text" id="image_url" name="image_url" required><br><br>
+        <label for="prompt">Prompt:</label>
+        <input type="text" id="prompt" name="prompt" required><br><br>
+        <input type="button" value="Generate" onclick="generateImage()">
+    </form>
+    <img id="webhook_image" style="display:none;">
+    <p id="webhook_image_code">{{ webhook_image_code }}</p>
+</body>
+</html>
